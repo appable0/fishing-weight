@@ -1,0 +1,27 @@
+.
+├── functions.py
+├── json
+│   ├── api_response.json
+│   ├── player_be_deaths.json
+│   ├── player_be_kills.json
+│   ├── player_collections.json
+│   ├── player_minions.json
+│   ├── player_stats.json
+│   └── player_tfish_stats.json
+├── key.txt
+├── project_structure.txt
+├── __pycache__
+│   └── scrape.cpython-312.pyc
+├── scrape.py
+└── sorted_data
+    ├── bestiary_data.py
+    ├── collections.py
+    ├── minions.py
+    ├── pet_data.py
+    ├── player_sc_fished.py
+    ├── player_skill.py
+    ├── __pycache__
+    │   └── collections.cpython-312.pyc
+    └── trophy_fish_data.py
+
+5 directories, 20 files
