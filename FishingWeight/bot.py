@@ -8,21 +8,15 @@ from functions import get_player_fishing_level
 from functions import determine_dolphin_rarity, get_dolphin_ms_weight, format_pet_name
 
 bot = lightbulb.BotApp(
-    token='Token For Discord Bot', 
-    default_enabled_guilds=('Allowed Discords server IDs')
+    token='Discord Bot Token', 
+    default_enabled_guilds=('Allowed Discord Server IDs')
 )
-
-@bot.listen(hikari.StartedEvent)
-async def on_started(event):
-    print('Bot has started!')
 
 @bot.command
 @lightbulb.option('ign', 'in game name', type=str)
 @lightbulb.command('fishing_weight', 'Gathers profile fishing weight given a valid IGN')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def ping(ctx):
-    
-    
     
     IGN = ctx.options.ign
 
@@ -80,8 +74,8 @@ async def ping(ctx):
                 player_collection = profile_info['collection']
                 player_pet_data = profile_info['pets_data']['pets']
 
-    if player_data:
-        player_crafted_minions = player_data['crafted_generators']
+    #if player_data:
+    #    player_crafted_minions = player_data['crafted_generators']
 
     # if player_inventory:
     #     player_bags = player_inventory['bag_contents']
@@ -179,7 +173,9 @@ async def ping(ctx):
         return round(((lvl / 50) * 2500))
 
     def getFishingExpOverflowWeight(lvl, overflow):
-        return round((10 * math.sqrt((overflow / 60000000) * 10000) - 1000))
+        if round((10 * math.sqrt((overflow / 60000000) * 10000) - 750)) < 0:
+            return 0
+        return round((10 * math.sqrt((overflow / 60000000) * 10000) - 750))
 
 
     total_fexp_weight = getFishingExpWeight(player_fishing_level, overflow_fishing_exp)
@@ -255,7 +251,9 @@ async def ping(ctx):
             if overflow_kills <= 0: 
                 overflow_weight = 0
             else:
-                overflow_weight = math.sqrt(((overflow_kills / self.max_be_kills) * sc_weight) / self.scalar)
+                overflow_weight = 2 * math.sqrt(((overflow_kills / self.max_be_kills) * sc_weight) / self.scalar) -25
+                if overflow_weight < 0:
+                    overflow_weight = (((overflow_kills / self.max_be_kills) * sc_weight) / self.scalar)/25
             
             return round(overflow_weight)
         
@@ -269,26 +267,26 @@ async def ping(ctx):
 
     sea_creatures = {
         'water_family': {
-            'agarimoo': Mob(name = 'agarimoo', api_name = 'agarimoo_35', max_be_kills = 4000, catch_chance = 16.31, scalar = 60, max_ms_weight = 61.4), 
-            'carrot_king': Mob(name = 'agarimoo', api_name = 'agarimoo_35', max_be_kills = 4000, catch_chance = 16.31, scalar = 60, max_ms_weight = 61.4), 
-            'catfish': Mob(name='catfish', api_name='catfish_23', max_be_kills=1000, catch_chance=5.10, scalar=120, max_ms_weight=64.8),
-            'deep_sea_protector': Mob(name='deep_sea_protector', api_name='deep_sea_protector_60', max_be_kills=1000, catch_chance=1.79, scalar=8, max_ms_weight=34.4),
-            'guardian_defender': Mob(name='guardian_defender', api_name='guardian_defender_45', max_be_kills=1000, catch_chance=2.65, scalar=6, max_ms_weight=30.2),
-            'night_squid': Mob(name='night_squid', api_name='night_squid_6', max_be_kills=1000, catch_chance=17.85, scalar=40, max_ms_weight=59.6),
-            'oasis_rabbit': Mob(name='oasis_rabbit', api_name='oasis_rabbit_10', max_be_kills=300, catch_chance=5.08, scalar=10, max_ms_weight=60.2),
-            'oasis_sheep': Mob(name='oasis_sheep', api_name='oasis_sheep_10', max_be_kills=300, catch_chance=11.85, scalar=30, max_ms_weight=32.0),
-            'poisoned_water_worm': Mob(name='poisoned_water_worm', api_name='poisoned_water_worm_25', max_be_kills=1000, catch_chance=50.00, scalar=200, max_ms_weight=32.0),
-            'rider_of_the_deep': MobCollection(name='rider_of_the_deep', api_name1='chicken_deep_20', api_name2='zombie_deep_20', max_be_kills=4000, catch_chance=8.15, scalar=40, max_ms_weight=24.8),
-            'sea_archer': Mob(name='sea_archer', api_name='sea_archer_15', max_be_kills=4000, catch_chance=8.15, scalar=50, max_ms_weight=24.8),
-            'sea_guardian': Mob(name='sea_guardian', api_name='sea_guardian_10', max_be_kills=4000, catch_chance=12.23, scalar=50, max_ms_weight=30.3),
-            'sea_leech': Mob(name='sea_leech', api_name='sea_leech_30', max_be_kills=1000, catch_chance=3.26, scalar=11.5, max_ms_weight=33),
-            'sea_walker': Mob(name='sea_walker', api_name='sea_walker_4', max_be_kills=4000, catch_chance=16.31, scalar=80, max_ms_weight=38.3),
+            'agarimoo': Mob(name = 'agarimoo', api_name = 'agarimoo_35', max_be_kills = 4000, catch_chance = 16.31, scalar = 60, max_ms_weight = 36.7), 
+            'carrot_king': Mob(name = 'carrot_king', api_name = 'carrot_king_25', max_be_kills = 400, catch_chance = 5.76, scalar = 12, max_ms_weight = 64.8), 
+            'catfish': Mob(name='catfish', api_name='catfish_23', max_be_kills=1000, catch_chance=5.10, scalar=20, max_ms_weight=34.4),
+            'deep_sea_protector': Mob(name='deep_sea_protector', api_name='deep_sea_protector_60', max_be_kills=1000, catch_chance=1.79, scalar=8, max_ms_weight=30.2),
+            'guardian_defender': Mob(name='guardian_defender', api_name='guardian_defender_45', max_be_kills=1000, catch_chance=2.65, scalar=6, max_ms_weight=59.6),
+            'night_squid': Mob(name='night_squid', api_name='night_squid_6', max_be_kills=1000, catch_chance=17.85, scalar=40, max_ms_weight=60.2),
+            'oasis_rabbit': Mob(name='oasis_rabbit', api_name='oasis_rabbit_10', max_be_kills=300, catch_chance=5.08, scalar=10, max_ms_weight=68.6),
+            'oasis_sheep': Mob(name='oasis_sheep', api_name='oasis_sheep_10', max_be_kills=300, catch_chance=11.85, scalar=30, max_ms_weight=53.3),
+            'poisoned_water_worm': Mob(name='poisoned_water_worm', api_name='poisoned_water_worm_25', max_be_kills=1000, catch_chance=50.00, scalar=200, max_ms_weight=33.8),
+            'rider_of_the_deep': MobCollection(name='rider_of_the_deep', api_name1='chicken_deep_20', api_name2='zombie_deep_20', max_be_kills=4000, catch_chance=8.15, scalar=40, max_ms_weight=27.5),
+            'sea_archer': Mob(name='sea_archer', api_name='sea_archer_15', max_be_kills=4000, catch_chance=8.15, scalar=50, max_ms_weight=30.3),
+            'sea_guardian': Mob(name='sea_guardian', api_name='sea_guardian_10', max_be_kills=4000, catch_chance=12.23, scalar=50, max_ms_weight=33.0),
+            'sea_leech': Mob(name='sea_leech', api_name='sea_leech_30', max_be_kills=1000, catch_chance=3.26, scalar=11.5, max_ms_weight=38.3),
+            'sea_walker': Mob(name='sea_walker', api_name='sea_walker_4', max_be_kills=4000, catch_chance=16.31, scalar=80, max_ms_weight=27.5),
             'sea_witch': Mob(name='sea_witch', api_name='sea_witch_15', max_be_kills=4000, catch_chance=14.27, scalar=70, max_ms_weight=27.5),
-            'squid': Mob(name='squid', api_name='pond_squid_1', max_be_kills=10000, catch_chance=24.56, scalar=75, max_ms_weight=27.5),
-            'sea_emperor': MobCollection(name='sea_emperor', api_name1='guardian_emperor_150', api_name2='skeleton_emperor_150', max_be_kills=100, catch_chance=0.24, scalar=0.5, max_ms_weight=44.2),
-            'water_hydra': Mob(name='water_hydra', api_name='water_hydra_100', max_be_kills=4000, catch_chance=0.44, scalar=1, max_ms_weight=64.8),
-            'water_worm': Mob(name='water_worm', api_name='water_worm_20', max_be_kills=1000, catch_chance=50.00, scalar=200, max_ms_weight=59.9),
-            'zombie_miner': Mob(name='zombie_miner', api_name='zombie_miner_150', max_be_kills=250, catch_chance=10.91, scalar=24, max_ms_weight=24.8)
+            'squid': Mob(name='squid', api_name='pond_squid_1', max_be_kills=10000, catch_chance=24.56, scalar=7.5, max_ms_weight=50),
+            'sea_emperor': MobCollection(name='sea_emperor', api_name1='guardian_emperor_150', api_name2='skeleton_emperor_150', max_be_kills=100, catch_chance=0.24, scalar=0.5, max_ms_weight=64.8),
+            'water_hydra': Mob(name='water_hydra', api_name='water_hydra_100', max_be_kills=400, catch_chance=0.44, scalar=1, max_ms_weight=59.9),
+            'water_worm': Mob(name='water_worm', api_name='water_worm_20', max_be_kills=1000, catch_chance=50.00, scalar=200, max_ms_weight=33.8),
+            'zombie_miner': Mob(name='zombie_miner', api_name='zombie_miner_150', max_be_kills=250, catch_chance=10.91, scalar=24, max_ms_weight=61.4)
         }, 
         'lava_family': {
             'fire_eel': Mob(name='fire_eel', api_name='fire_eel_240', max_be_kills=1000, catch_chance=6.08, scalar=8.25, max_ms_weight=27.5),
@@ -393,19 +391,19 @@ async def ping(ctx):
 
     # minions
 
-    class Minion:
-        def __init__(self, name, tier):
-            self.name = name
-            self.tier = tier
+    #class Minion:
+    #    def __init__(self, name, tier):
+    #        self.name = name
+    #        self.tier = tier
 
 
-    player_best_minions = {}
-    for minion in player_crafted_minions:
-        name_parts = minion.split('_')
-        minion_name = format_pet_name(''.join(name_parts[:-1]))
-        minion_tier = int(name_parts[-1])
-        if minion_name not in player_best_minions or minion_tier > player_best_minions[minion_name].tier:
-            player_best_minions[minion_name] = Minion(minion_name, minion_tier)
+    #player_best_minions = {}
+    #for minion in player_crafted_minions:
+    #    name_parts = minion.split('_')
+    #    minion_name = format_pet_name(''.join(name_parts[:-1]))
+    #    minion_tier = int(name_parts[-1])
+    #    if minion_name not in player_best_minions or minion_tier > player_best_minions[minion_name].tier:
+    #        player_best_minions[minion_name] = Minion(minion_name, minion_tier)
 
     # for k, v in player_best_minions.items():
     #     print(f'{k}: {v.name}, {v.tier}')
@@ -495,7 +493,7 @@ async def ping(ctx):
         'karate_fish': Tfishi(name='karate_fish', catch_chance=0.01, bronze_scalar=160, silver_scalar=400, gold_scalar=3500, diamond_scalar=12000),
         'golden_fish': Tfishi(name='golden_fish', catch_chance=0.005, bronze_scalar=400, silver_scalar=1000, gold_scalar=8700, diamond_scalar=30000),
         'sulphur_skitter': Tfishi(name='sulphur_skitter', catch_chance=0.3, bronze_scalar=2, silver_scalar=5, gold_scalar=40, diamond_scalar=150),
-        'obfuscated_fish_1': Tfishi(name='obfuscated_fish_1', catch_chance=0.25, bronze_scalar=0.01, silver_scalar=0.01, gold_scalar=0.05, diamond_scalar=0.1),
+        'obfuscated_fish_1': Tfishi(name='obfuscated_fish_1', catch_chance=0.25, bronze_scalar=0.01, silver_scalar=0.02, gold_scalar=0.05, diamond_scalar=0.1),
     }
 
     total_tfishi_weight = sum(tfishi_object.weight for tfishi_object in all_tfish.values())
@@ -513,7 +511,10 @@ async def ping(ctx):
     dolphin_milestone_weight = get_dolphin_ms_weight(pet_milestone_rarity)
 
     # sharks killed
-    sharks_killed = player_leveling['fishing_festival_sharks_killed']
+    try:
+        sharks_killed = player_leveling['fishing_festival_sharks_killed']
+    except:
+        sharks_killed = 0
     SHARK_FESTIVAL_MAX = 5000
     progress_shark_festival = min(1, sharks_killed / 5000)
     shark_festival_completion_weight = round(progress_shark_festival * 250)
